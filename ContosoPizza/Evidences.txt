@@ -1,0 +1,150 @@
+-- EVIDENCE FOR ADDING MORE RECORDS -- ID : 3-4 ---
+
+-----GET ALL PIZZAS
+
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+Date: Sat, 04 Jul 2026 02:51:47 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+[
+  {
+    "id": 1,
+    "name": "Classic Italian",
+    "isGlutenFree": false
+  },
+  {
+    "id": 2,
+    "name": "Veggie",
+    "isGlutenFree": true
+  },
+  {
+    "id": 3,
+    "name": "Sicilian",
+    "isGlutenFree": false
+  },
+  {
+    "id": 4,
+    "name": "Pepperoni",
+    "isGlutenFree": false
+  }
+]
+
+---- GET PIZZA BY ITS ID
+
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+Date: Sat, 04 Jul 2026 02:54:04 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+{
+  "id": 1,
+  "name": "Classic Italian",
+  "isGlutenFree": false
+}
+
+
+----- WRONG ID -- NOT FOUND
+
+HTTP/1.1 404 Not Found
+Connection: close
+Content-Type: application/problem+json; charset=utf-8
+Date: Sat, 04 Jul 2026 02:54:41 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+  "title": "Not Found",
+  "status": 404,
+  "traceId": "00-704bd5b94bd7ebba2be92a370150dc00-4ed2a3853461e1ba-00"
+}
+
+ -- POST NEW PIZZA 
+
+
+HTTP/1.1 201 Created
+Connection: close
+Content-Type: application/json; charset=utf-8
+Date: Sat, 04 Jul 2026 02:57:28 GMT
+Server: Kestrel
+Location: https://localhost:7275/Pizza/5
+Transfer-Encoding: chunked
+
+{
+  "id": 5,
+  "name": "Hawaii",
+  "isGlutenFree": false
+}
+
+
+--- UPDATE PIZZA
+
+HTTP/1.1 204 No Content
+Connection: close
+Date: Sat, 04 Jul 2026 02:58:19 GMT
+Server: Kestrel
+
+
+---- DELETE PIZZA
+
+HTTP/1.1 204 No Content
+Connection: close
+Date: Sat, 04 Jul 2026 02:59:23 GMT
+Server: Kestrel
+
+-------------------------------------------
+
+
+function to have summary sales
+
+
+------------------------------------------
+
+void GenerateSalesSummary(IEnumerable<string> salesFiles, string salesTotalDir)
+{
+    double salesTotal = 0;
+    StringBuilder details = new StringBuilder();
+
+    foreach (var file in salesFiles)
+    {
+        string salesJson = File.ReadAllText(file);
+        string fileName = Path.GetFileName(file);
+
+        double fileTotal = 0;
+
+        if (fileName.Equals("sales.json", StringComparison.OrdinalIgnoreCase))
+        {
+            SalesData? data = JsonConvert.DeserializeObject<SalesData?>(salesJson);
+            fileTotal = data?.Total ?? 0;
+        }
+        else if (fileName.Equals("salestotals.json", StringComparison.OrdinalIgnoreCase))
+        {
+            SalesTotalData? data = JsonConvert.DeserializeObject<SalesTotalData?>(salesJson);
+            fileTotal = data?.OverallTotal ?? 0;
+        }
+        
+        salesTotal += fileTotal;
+
+        details.AppendLine($"{Path.GetFileName(Path.GetDirectoryName(file))}/{Path.GetFileName(file)}: {fileTotal:C}");
+    }
+    
+    StringBuilder report = new StringBuilder();
+
+    report.AppendLine("Sales Summary");
+    report.AppendLine("========================");
+    report.AppendLine($"Total Sales: {salesTotal:C}");
+    report.AppendLine();
+    report.AppendLine("Details:");
+    report.Append(details);
+
+    File.WriteAllText(Path.Combine(salesTotalDir, "salesSummary.txt"), report.ToString());
+}
+
+record SalesData (double Total);
+
+record SalesTotalData(double OverallTotal);
