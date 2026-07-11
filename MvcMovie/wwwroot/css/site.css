@@ -1,0 +1,64 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.createBtn{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+#filterBtn{
+  padding-left: .5em;
+  padding-right: .5em;
+}
+
+.filter-bar select, .filter-bar input{
+  padding: .30em;
+  margin: .30em;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.form-group{
+  padding-top: .5em;
+  padding-bottom: .5em;
+}
+
+.subpgsTitle{
+  margin-bottom: .5em;
+}
+.form-group input{
+  margin-top: .30em;
+}
+
+.returnLink{
+  margin-top: 1em;
+}
